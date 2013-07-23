@@ -19,7 +19,7 @@ module TaxCloud #:nodoc:
     # === Parameters
     # [params] Address params.
     def initialize(params)
-      @client = params.delete(:client) || TaxCloud.client
+      @client = params.delete(:client)
       super
     end
 
@@ -32,7 +32,7 @@ module TaxCloud #:nodoc:
       params = params.merge({
         'uspsUserID' => TaxCloud.configuration.usps_username
       }) if TaxCloud.configuration.usps_username
-      response = @client.request(:verify_address, params)
+      response = request :verify_address, params
       TaxCloud::Responses::VerifyAddress.parse(response)
     end
 
@@ -55,5 +55,11 @@ module TaxCloud #:nodoc:
       }
     end
 
+
+    private
+
+    def request(method, params)
+      (@client || TaxCloud.client).request(method, params)
+    end
   end
 end
