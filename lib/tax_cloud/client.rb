@@ -3,11 +3,14 @@ module TaxCloud #:nodoc:
   class Client < Savon::Client
 
     # Create a new client.
-    def initialize
+    def initialize(api_login_id = nil, api_key = nil)
+      @api_login_id = api_login_id
+      @api_key = api_key
+
       super TaxCloud::WSDL_URL
     end
 
-    # Make a safe SOAP call. 
+    # Make a safe SOAP call.
     # Will raise a TaxCloud::Errors::SoapError on error.
     #
     # === Parameters
@@ -31,8 +34,8 @@ module TaxCloud #:nodoc:
       # Authorization hash to use with all SOAP requests
       def auth_params
         {
-          'apiLoginID' => TaxCloud.configuration.api_login_id,
-          'apiKey' => TaxCloud.configuration.api_key
+          'apiLoginID' => @api_login_id || TaxCloud.configuration.api_login_id,
+          'apiKey' => @api_key || TaxCloud.configuration.api_key
         }
       end
 

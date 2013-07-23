@@ -20,6 +20,8 @@ module TaxCloud #:nodoc:
     # === Parameters
     # [params] Transaction params.
     def initialize(params = {})
+      @client = params.delete(:client) || TaxCloud.client
+
       params = { :cart_items => [] }.merge(params)
       super params
     end
@@ -35,7 +37,7 @@ module TaxCloud #:nodoc:
         'destination' => destination.to_hash
       }
 
-      response = TaxCloud.client.request :lookup, request_params
+      response = request :lookup, request_params
       TaxCloud::Responses::Lookup.parse response
     end
 
@@ -53,7 +55,7 @@ module TaxCloud #:nodoc:
         'dateAuthorized' => xml_date(options[:date_authorized])
       }
 
-      response = TaxCloud.client.request :authorized, request_params
+      response = request :authorized, request_params
       TaxCloud::Responses::Authorized.parse response
     end
 
@@ -70,7 +72,7 @@ module TaxCloud #:nodoc:
         'dateCaptured' => xml_date(options[:date_captured])
       }
 
-      response = TaxCloud.client.request :captured, request_params
+      response = request :captured, request_params
       TaxCloud::Responses::Captured.parse response
     end
 
@@ -89,7 +91,7 @@ module TaxCloud #:nodoc:
         'dateCaptured' => xml_date(options[:date_captured])
       }
 
-      response = TaxCloud.client.request :authorized_with_capture, request_params
+      response = request :authorized_with_capture, request_params
       TaxCloud::Responses::AuthorizedWithCapture.parse response
     end
 
@@ -105,11 +107,15 @@ module TaxCloud #:nodoc:
         'returnedDate' => xml_date(options[:returned_date])
       }
 
-      response = TaxCloud.client.request :returned, request_params
+      response = request :returned, request_params
       TaxCloud::Responses::Returned.parse response
     end
 
     private
+
+    def request(method, params)
+      @client.request method, params
+    end
 
     def xml_date(val)
       val.respond_to?(:strftime) ? val.strftime("%Y-%m-%d") : val
