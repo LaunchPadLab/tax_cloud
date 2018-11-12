@@ -75,4 +75,11 @@ class TestTransaction < TestSetup
       assert_equal 'OK', result
     end
   end
+
+  def test_set_custom_tax_cloud_client
+    client = TaxCloud::Client.new
+    transaction = TaxCloud::Transaction.new client: client
+    assert_equal client, transaction.client
+    refute_equal transaction.client, TaxCloud.client
+  end
 end

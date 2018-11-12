@@ -2,7 +2,10 @@ module TaxCloud #:nodoc:
   # A <tt>Client</tt> communicates with the TaxCloud service.
   class Client < Savon::Client
     # Create a new client.
-    def initialize
+    def initialize(api_login_id = nil, api_key = nil)
+      @api_login_id = api_login_id
+      @api_key = api_key
+
       super client_params
     end
 
@@ -35,8 +38,8 @@ module TaxCloud #:nodoc:
     def auth_params
       return {} unless TaxCloud.configuration
       {
-        'apiLoginID' => TaxCloud.configuration.api_login_id,
-        'apiKey' => TaxCloud.configuration.api_key
+        'apiLoginID' => @api_login_id || TaxCloud.configuration.api_login_id,
+        'apiKey' => @api_key || TaxCloud.configuration.api_key
       }
     end
 

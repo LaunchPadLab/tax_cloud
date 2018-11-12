@@ -51,4 +51,11 @@ class TestAddress < TestSetup
     end
     assert_equal e.problem, 'Invalid Zip Code.'
   end
+
+  def test_set_custom_tax_cloud_client
+    client = TaxCloud::Client.new
+    address = TaxCloud::Address.new address1: '888 6th Ave', city: 'New York', state: 'New York', zip5: '10001', client: client
+    assert_equal client, address.client
+    refute_equal address.client, TaxCloud.client
+  end
 end

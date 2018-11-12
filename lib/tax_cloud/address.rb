@@ -13,6 +13,16 @@ module TaxCloud #:nodoc:
     attr_accessor :zip5
     # 4-digit Zip Code.
     attr_accessor :zip4
+    # TaxCloud client
+    attr_reader :client
+
+    # Create a new address.
+    # === Parameters
+    # [params] Address params.
+    def initialize(params)
+      @client = params.delete(:client) || TaxCloud.client
+      super
+    end
 
     # Verify this address.
     #
@@ -24,7 +34,7 @@ module TaxCloud #:nodoc:
           'uspsUserID' => TaxCloud.configuration.usps_username
         )
       end
-      response = TaxCloud.client.request(:verify_address, params)
+      response = client.request(:verify_address, params)
       TaxCloud::Responses::VerifyAddress.parse(response)
     end
 
