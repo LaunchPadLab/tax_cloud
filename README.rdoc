@@ -96,6 +96,21 @@ TaxCloud[http://www.taxcloud.com] optionally integrates with the USPS Address AP
     verified_address.zip4 # 3502
     verified_address.zip # 10001-3502
 
+You can also specify a different <tt>TaxCloud::Client</tt> for each <tt>TaxCloud::Address</tt>
+
+    client = TaxCloud::Client.new('other_tax_cloud_api_login_id', 'other_tax_cloud_api_key')
+
+    address = TaxCloud::Address.new({
+      :address1 => '888 6th Ave',
+      :city => 'New York',
+      :state => 'New York',
+      :zip5 => '10001',
+      :client => client
+    })
+
+    verified_address = address.verify
+    ...
+
 === Tax Codes
 TaxCloud[http://www.taxcloud.com] maintains a list of all Taxability Information Codes or TICs, which can be found at https://taxcloud.net/tic.
 
